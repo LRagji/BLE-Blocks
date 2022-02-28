@@ -40,6 +40,7 @@ void setup() {
   //  while (!Serial);
 
   // initialize Temp/Humidity sensor
+  delay(100); //There is a issue which needs this delay https://github.com/arduino-libraries/Arduino_HTS221/issues/4
   if (!HTS.begin()) {
     Serial.println("TH sensor init failed!!,Program Halted");
     while (1);
@@ -96,10 +97,8 @@ void loop() {
         TempChar.writeValue(temperature);
       }
     }
-    delay(50);
     if (HumidityChar.subscribed())
     {
-      //float temperature = HTS.readTemperature();//not sure if we need it here
       float humidity = HTS.readHumidity();
       float existingHumidity = float(HumidityChar.value());
       existingHumidity = existingHumidity - humidity;
@@ -108,7 +107,6 @@ void loop() {
         HumidityChar.writeValue(humidity);
       }
     }
-    delay(50);
     if (ADC1Char.subscribed())
     {
       int adcCounts = analogRead(A0);
@@ -119,6 +117,7 @@ void loop() {
         ADC1Char.writeValue(adcCounts);
       }
     }
+     delay(100);
   }
   delay(100);
 }
