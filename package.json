@@ -8,11 +8,13 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "all":"npx react-native run-ios --udid 00008101-000275DE0C00001E && react-native run-android"
+    "all": "npx react-native run-ios --udid 00008101-000275DE0C00001E && react-native run-android"
   },
   "dependencies": {
     "react": "17.0.2",
-    "react-native": "0.67.3"
+    "react-native": "0.67.3",
+    "react-native-paper": "^4.11.2",
+    "react-native-vector-icons": "^9.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -24,3 +24,4 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 3. [Optional] npm install -g ios-deploy to work with react native cli for direct iphone deploy `npx react-native run-ios --udid 00008101-000275DE0C00001F`
 ## TODO
 1. Change bundle id for IOS & Android App
+2. Change App Icon and App name for IOS & Android
