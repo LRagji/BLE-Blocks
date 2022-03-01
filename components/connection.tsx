@@ -7,7 +7,7 @@ interface IAppState {
     discoveryToken: string,
     devices: Array<Device>,
     command: string,
-    connectedDevice: Device | null,
+    connectedDevice: BleComms | null,
     response: string,
     searching: boolean,
     snackBarErrorMessage: string | null
@@ -32,51 +32,30 @@ export class Connections extends React.Component<null, IAppState> {
 
     }
 
-    startDiscovery(): void {
-        // CommsManager.createInstance()
-        //     .then((commsManagerSingletonInstance) => {
-        //         this.commsManagerSingletonInstance = commsManagerSingletonInstance;
-        //         commsManagerSingletonInstance.discoverDevices(this.totalSearchTime, this.deviceFound)
-        //             .then((token) => {
-        //                 this.setState({ ...this.state, "searching": true, "discoveryToken": token, "devices": new Array<IDevice>() });
-        //                 setTimeout(_ => this.setState({ "searching": false }), this.totalSearchTime);
-        //             });
-        //     });
-        this.setState({ ...this.state, "searching": true,"devices": new Array<Device>() });
-        try {
-            BleComms.discover(30, (newDevice: Device | null, timedOut: boolean) => {
-                if (newDevice != null) {
-                    this.setState({ ...this.state, "devices": new Array<Device>(...this.state.devices, newDevice) });
-                }
-
-                if (timedOut ===true) {
-                    this.setState({ ...this.state, "searching": false });
-                }
+    async startDiscovery(): Promise<void> {
+        const token = await BleComms.discover(30, (newDevice: Device | null, timedOut: boolean) => {
+            if (newDevice != null) {
+                this.setState({ ...this.state, "devices": new Array<Device>(...this.state.devices, newDevice) });
             }
-            );
-        }
-        catch (err) {
-            console.log(err);
-        }
+
+            if (timedOut === true) {
+                this.setState({ ...this.state, "searching": false });
+            }
+        });
+        this.setState({ ...this.state, "searching": true, "devices": new Array<Device>(), "discoveryToken": token });
     }
 
-    async connectDevice(deviceIndex: Device) {
-        // try {
-        //     if (this.state.connectedDevice != null) {
-        //         this.disconnect();
-        //     }
-        //     const device = this.state.devices[deviceIndex];
-        //     await device.connect();
-        //     this.setState({ "connectedDevice": device })
-        // }
-        // catch (err) {
-        //     this.setState({ "snackBarErrorMessage": (err as any).message });
-        // }
+    async connectDevice(device: Device) {
+        if (this.state.connectedDevice != null) {
+            this.disconnect();
+        }
+        const connectedDevice = await BleComms.connect(device);
+        this.setState({ "connectedDevice": connectedDevice })
     }
 
     async disconnect() {
-        // await this.state.connectedDevice?.disconnect();
-        // this.setState({ "connectedDevice": null })
+        await this.state.connectedDevice?.disconnect();
+        this.setState({ "connectedDevice": null })
     }
 
     async componentDidMount() {
@@ -106,7 +85,6 @@ export class Connections extends React.Component<null, IAppState> {
             //Not sure
         }
     }
-
 
     render(): React.ReactNode {
         return (

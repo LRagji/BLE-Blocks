@@ -114,4 +114,10 @@ export class BleComms {
         this._activeDevice = device;
         this.info = deviceInfo;
     }
+
+    async disconnect()
+    {
+        await BleManager.disconnect(this._activeDevice?.id as string);
+        this.info = undefined;
+    }
 }
