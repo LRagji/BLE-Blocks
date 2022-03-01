@@ -42,9 +42,9 @@ export class Connections extends React.Component<null, IAppState> {
         //                 setTimeout(_ => this.setState({ "searching": false }), this.totalSearchTime);
         //             });
         //     });
-        this.setState({ ...this.state, "searching": true });
+        this.setState({ ...this.state, "searching": true,"devices": new Array<Device>() });
         try {
-            BleComms.discover(10, (newDevice: Device | null, timedOut: boolean) => {
+            BleComms.discover(30, (newDevice: Device | null, timedOut: boolean) => {
                 if (newDevice != null) {
                     this.setState({ ...this.state, "devices": new Array<Device>(...this.state.devices, newDevice) });
                 }

@@ -68,7 +68,7 @@ export class BleComms {
                 deviceFoundCallback(null, true);
                 BleComms.stopDiscover(BleComms._activeToken as string);
             }, searchForSeconds * 1000);
-            await BleManager.scan([], searchForSeconds, false);
+            await BleManager.scan([CustomBLEAdvertiseServiceID], searchForSeconds, false);
             return BleComms._activeToken;
         }
     }
