@@ -3,17 +3,22 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "a": "react-native run-android",
+    "i": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "all": "npx react-native run-ios --udid 00008101-000275DE0C00001E && react-native run-android"
   },
   "dependencies": {
+    "@react-navigation/native": "^6.0.8",
+    "@react-navigation/native-stack": "^6.5.0",
     "react": "17.0.2",
     "react-native": "0.67.3",
+    "react-native-ble-manager": "^8.0.2",
     "react-native-paper": "^4.11.2",
+    "react-native-safe-area-context": "^4.1.0",
+    "react-native-screens": "^3.13.0",
     "react-native-vector-icons": "^9.1.0"
   },
   "devDependencies": {
