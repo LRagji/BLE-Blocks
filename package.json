@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "a": "react-native run-android",
+    "a": "tsc && react-native run-android",
     "i": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",

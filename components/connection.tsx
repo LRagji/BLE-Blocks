@@ -2,6 +2,9 @@ import React from "react";
 import { View, RefreshControl, ScrollView, Platform, PermissionsAndroid } from 'react-native';
 import { List, Paragraph } from 'react-native-paper';
 import { BleComms, Device } from '../models/ble-comms';
+import { ParamList } from './common-types/screen-params';
+import { Blocks } from './blocks';
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 interface IAppState {
     discoveryToken: string,
@@ -12,10 +15,10 @@ interface IAppState {
     searching: boolean,
     snackBarErrorMessage: string | null
 }
+type propsType = NativeStackScreenProps<ParamList, "BConnection">;
+export class Connections extends React.Component<propsType, IAppState> {
 
-export class Connections extends React.Component<any, IAppState> {
-
-    constructor(props: any) {
+    constructor(props: propsType) {
         super(props);
         this.state = {
             discoveryToken: "",
@@ -50,7 +53,8 @@ export class Connections extends React.Component<any, IAppState> {
             this.disconnect();
         }
         const connectedDevice = await BleComms.connect(device);
-        this.setState({ "connectedDevice": connectedDevice })
+        this.setState({ "connectedDevice": connectedDevice });
+        this.props.navigation.navigate("Discovery");
     }
 
     async disconnect() {
