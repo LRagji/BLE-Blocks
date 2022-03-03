@@ -13,7 +13,7 @@ interface IAppState {
     snackBarErrorMessage: string | null
 }
 
-export class Connections extends React.Component<null, IAppState> {
+export class Connections extends React.Component<any, IAppState> {
 
     constructor(props: any) {
         super(props);
