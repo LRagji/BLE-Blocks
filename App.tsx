@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Connections } from './components/connection';
-import { Blocks } from './components/blocks';
-import { AppHeader } from './components/app-header';
+import { SearchDevices } from './src/screens/search-devices';
+import { DeviceServices } from './src/screens/device-services';
+import { AppHeader } from './src/components/app-header';
 
 const RootStack = createNativeStackNavigator();
 
@@ -18,8 +18,8 @@ const App = () => {
       screenOptions={{
         header: (props) => <AppHeader {...props} />
       }}>
-      <RootStack.Screen name="BConnection" component={Connections} options={{ title: 'Connect to device' }} />
-      <RootStack.Screen name="Discovery" component={Blocks} options={{ title: 'Discovered Blocks' }} />
+      <RootStack.Screen name="search-devices" component={SearchDevices} options={{ title: 'Search devices' }} />
+      <RootStack.Screen name="device-services" component={DeviceServices} options={{ title: 'Discover services' }} />
     </RootStack.Navigator>
   );
 };

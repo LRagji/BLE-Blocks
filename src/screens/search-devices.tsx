@@ -2,28 +2,25 @@ import React from "react";
 import { View, RefreshControl, ScrollView, Platform, PermissionsAndroid } from 'react-native';
 import { List, Paragraph, Dialog, Portal, ActivityIndicator, Title, Avatar, Button } from 'react-native-paper';
 import { BleComms, Device } from '../models/ble-comms';
-import { ParamList } from './common-types/screen-params';
-import { Blocks } from './blocks';
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { SearcDevicePropsType } from './screen-params';
+
 
 interface IAppState {
     discoveryToken: string,
     devices: Array<Device>,
-    connectedDevice: BleComms | null,
     searching: boolean,
     connecting: boolean,
     connectionError: string | null,
     snackBarErrorMessage: string | null
 }
-type propsType = NativeStackScreenProps<ParamList, "BConnection">;
-export class Connections extends React.Component<propsType, IAppState> {
 
-    constructor(props: propsType) {
+export class SearchDevices extends React.Component<SearcDevicePropsType, IAppState> {
+
+    constructor(props: SearcDevicePropsType) {
         super(props);
         this.state = {
             discoveryToken: "",
             devices: new Array<Device>(),
-            connectedDevice: null,
             connecting: false,
             searching: false,
             connectionError: null,
@@ -51,23 +48,14 @@ export class Connections extends React.Component<propsType, IAppState> {
     async connectDevice(device: Device) {
         try {
             this.setState({ "connecting": true });
-            if (this.state.connectedDevice != null) {
-                this.disconnect();
-            }
-            const connectedDevice = await BleComms.connect(device);
-            this.setState({ "connectedDevice": connectedDevice });
+            await BleComms.connect(device);
             this.setState({ "connecting": false });
-            this.props.navigation.navigate("Discovery");
+            this.props.navigation.navigate("device-services");
         }
         catch (err) {
             const msg = `Connection failed, Please retry after sometime: ${(err as Error).message}`;
             this.setState({ "connectionError": msg });
         }
-    }
-
-    async disconnect() {
-        await this.state.connectedDevice?.disconnect();
-        this.setState({ "connectedDevice": null })
     }
 
     async componentDidMount() {
@@ -110,7 +98,7 @@ export class Connections extends React.Component<propsType, IAppState> {
         return (
             <View style={{ flex: 1 }} >
                 <Portal>
-                    <Dialog dismissable={false} visible={this.state.connecting}>
+                    <Dialog dismissable={this.state.connectionError !== null } visible={this.state.connecting}>
                         <Dialog.Content>
                             {this.state.connectionError != null ? failedDialogContent : sucessDialogContent}
                         </Dialog.Content>

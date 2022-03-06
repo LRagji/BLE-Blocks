@@ -17,6 +17,7 @@ export class BleComms {
     private static _deviceScanHandle: EmitterSubscription | null = null;
     private static _initialized: boolean = false;
     private static _timeoutHandle: any;
+    public static SingletonInstance?: BleComms;
 
     public info?: DeviceInfo;
     private _activeDevice?: Device;
@@ -90,6 +91,9 @@ export class BleComms {
     }
 
     static async connect(device: Device, retryAttempts = 3): Promise<BleComms> {
+        if (BleComms.SingletonInstance != undefined) {
+            await BleComms.SingletonInstance.disconnect();
+        }
         if (device.advertising.isConnectable === false) {
             return Promise.reject(new Error("Selected device doesnot support connection, please select another device."));
         }
@@ -107,7 +111,8 @@ export class BleComms {
             return Promise.reject(new Error("Failed to connect to the device, please try again."));
         }
         const gatProfile = await BleManager.retrieveServices(device.id)
-        return new BleComms(device, gatProfile);
+        BleComms.SingletonInstance = new BleComms(device, gatProfile);
+        return BleComms.SingletonInstance;
     }
 
     private constructor(device: BleManager.Peripheral, deviceInfo: DeviceInfo) {
@@ -115,9 +120,12 @@ export class BleComms {
         this.info = deviceInfo;
     }
 
-    async disconnect()
-    {
-        await BleManager.disconnect(this._activeDevice?.id as string);
+    async disconnect(): Promise<Device> {
+        const returnInstance = (this._activeDevice as Device);
+        await BleManager.disconnect(returnInstance.id);
         this.info = undefined;
+        BleComms.SingletonInstance = undefined;
+        this._activeDevice = undefined;
+        return returnInstance;
     }
 }
